@@ -1,5 +1,9 @@
-import { useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import './App.css';
+
+
+const MyContext = createContext(null)
+
 
 function ProductCategoryRow({ category }) {
   return (
@@ -28,6 +32,13 @@ function ProductRow({ product }) {
 function ProductTable({ products, filterText, inStockOnly }) {
   const rows = [];
   let lastCategory = null;
+  const [names, setNames] = useState([]);
+
+  useEffect(() => {
+    fetch('http://api.namefake.com/')
+    .then((res) => console.log(res))
+    .catch((error) => console.log(error))
+  }, [])
 
   products.forEach((product) => {
     if (
@@ -110,9 +121,11 @@ const PRODUCTS = [
 ];
 
 function LearningDoc() {
+  const myContext = useContext(MyContext)
   return (
     <div>
       <p><a href='https://react.dev/learn/thinking-in-react'>Doc projeto</a></p>
+      <p>{myContext}</p>
     </div> 
   )
 }
@@ -122,7 +135,9 @@ function App() {
   return (
     <>
       <FilterableProductTable products={PRODUCTS} />
-      <LearningDoc/>
+      <MyContext.Provider value="my_context">
+        <LearningDoc/>
+      </MyContext.Provider>
   </>
   )
 }
